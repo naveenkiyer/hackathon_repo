@@ -8,51 +8,27 @@ import os
 import time
 import requests
 from matroid.client import Matroid
-<<<<<<< HEAD
-from flask import request
-from flask import render_template
-from flask import Flask, abort, flash, redirect, render_template, request, url_for, jsonify
-#from flask.ext.stormpath import StormpathError, StormpathManager, User, login_required, login_user, logout_user, user
-from flask import Flask, Response, redirect, url_for, request, session, abort
-from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
 from app import app
 import urllib
-
-=======
-from flask import Flask, abort, flash, redirect, render_template, request, url_for
+from flask import Flask, abort, flash, redirect, render_template, request, url_for, jsonify
 from flask import Response, request, session
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
 from flask import json
 # UNCOMMENT ON AWS, if on dev server, run python views.py
-app = Flask(__name__)
->>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
+# app = Flask(__name__)
 
 # config
 app.config.update(
     SECRET_KEY = 'yoyoma',
 )
 
-<<<<<<< HEAD
 counter = 0
 idx = 1
 token = "c.mnDnhhSvAdqKkN6HA173o4y9khP8SQ08cgO1V4sO12wFLhhNRPgBkbuaGLcdANjvxyx0eFRUzAFeMCT3MXnntmc85qE8MMI55T0Eo8X9gNAJnEqHgg6k4JuZm7gl8s9w2ZbAz3hwY7ArHOpb" # Update with your token
 device_id = 'aR3wCNI9AHsvHEmEGJAgdcptmAh2KIg0qmaWOGmBD5EdVEJOI5GYdg'
 
-#os.environ["PATH"] += ":/Users/raymondyee/bin/geckodriver"
 s3 = boto3.resource('s3', region_name='us-west-2')
 
-#from selenium import webdriver
-
-#driver = webdriver.Firefox(service_args=['--ignore-ssl-errors=true', '--ssl-protocol=any']) # or add to your PATH
-#from selenium.webdriver import FirefoxOptions
-
-#opts = FirefoxOptions()
-#opts.add_argument("--headless")
-#driver = webdriver.Firefox(executable_path='/home/ubuntu/dataviz/geckodriver', firefox_options=opts)
-
-# silly user model
-=======
->>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
 class User(UserMixin):
 
     def __init__(self, id):
@@ -107,27 +83,10 @@ def login():
             flash('wrong password!')
             return abort(401)
     else:
-<<<<<<< HEAD
-        return Response('''
-        <form action="" method="post">
-            <p><input type=text name=username>
-            <p><input type=password name=password>
-            <p><input type=submit value=Login>
-        </form>
-        ''')
-
-# @app.route("/selenium")
-# def selenium():
-
-#     global counter
-
-#     driver.get('https://video.nest.com/live/zW42eZ201I')
-#     time.sleep(3)
-#     print("we have slept for 1 seconds")
-#     #print("The page source is: " + str(driver.page_source))
-#     driver.save_screenshot('screen' + str(counter) + '.png') # save a screenshot to disk
-#     counter += 1
-#     selenium()
+        if session['logged_in'] == False:
+            return render_template("login.html")
+        else:
+            return render_template("home.html")
 
 
 @app.route("/get_data")
@@ -179,14 +138,6 @@ def camera():
     return render_template("camera.html", cam_img=cam_img)
 
 
-
-=======
-        if session['logged_in'] == False:
-            return render_template("login.html")
-        else:
-            return render_template("home.html")
-
->>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
@@ -201,5 +152,5 @@ def page_not_found(e):
 def load_user(userid):
     return User(userid)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
