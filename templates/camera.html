@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>FallSafe</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 
+</head>
+ 
+<body>
+ 
+    <div id="camera">
+        <img id="cam_img_id" src={{cam_img}} height="580px" width="720px"/>
+    </div>
+
+
+</body>
+ 
+
+    <script>
+    console.log("We are in the javascript body!");
+    function changeImage(a) {
+        document.getElementById("cam_img_id").src=a;
+    }
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    function refresh() {
+        $(function() {
+
+              $.getJSON($SCRIPT_ROOT + '/poll', {a:5}, function(data) {
+                //$("#cam_img_id").text(data.result);
+                if (data.found == true) {
+                    changeImage(data.img_url);
+                }
+              });
+              return false;
+          });
+        }
+    console.log("We are about to set an interval!");
+    window.setInterval(refresh, 1500);
+
+    </script>
+
+</html>
+
+
+{% block body %}
+
+{% endblock %}
