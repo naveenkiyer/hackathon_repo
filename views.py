@@ -17,14 +17,17 @@ from flask import Flask, abort, flash, redirect, render_template, request, url_f
 from flask import Response, request, session
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
 from flask import json
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+
 # UNCOMMENT ON AWS, if on dev server, run python views.py
-# app = Flask(__name__)
+app = Flask(__name__)
 
 # config
 app.config.update(
     SECRET_KEY = 'yoyoma',
 )
 
+list_of_cameras = []
 counter = 0
 idx = 1
 token = "c.mnDnhhSvAdqKkN6HA173o4y9khP8SQ08cgO1V4sO12wFLhhNRPgBkbuaGLcdANjvxyx0eFRUzAFeMCT3MXnntmc85qE8MMI55T0Eo8X9gNAJnEqHgg6k4JuZm7gl8s9w2ZbAz3hwY7ArHOpb" # Update with your token
@@ -58,7 +61,7 @@ def home():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return render_template('home.html')
+        return render_template('home.html', list_of_cameras=list_of_cameras)
 
 @app.route('/authorize')
 def authorize():
@@ -97,8 +100,7 @@ def login():
         if session['logged_in'] == False:
             return render_template("login.html")
         else:
-            return render_template("home.html")
-
+            return render_template("home.html", list_of_cameras=list_of_cameras)
 
 @app.route("/get_data")
 def get_data():
@@ -202,6 +204,30 @@ def camera():
     cam_img = "https://s3-us-west-2.amazonaws.com/hackuva2018/nav" + str(idx) + ".jpg"
     return render_template("camera.html", cam_img=cam_img)
 
+@app.route("/new_camera", methods=['GET', 'POST'])
+def new_camera():
+    # form = CameraForm(request.form)
+ 
+    # # print(form.errors)
+    if request.method == 'POST':
+        name = request.form['name']
+        location = request.form['location']
+        description = request.form['description']
+        list_of_numbers = request.form['list_of_numbers']
+
+        print("IN NEW CAMERA")
+        print(name)
+        print(location)
+        print(description)
+        print(list_of_numbers)
+
+        list_of_cameras.append({'name': name, 'location': location, 'description': description, list_of_numbers: 'list_of_numbers'})
+        print(list_of_cameras)
+        return render_template('home.html', list_of_cameras=list_of_cameras)
+    else:
+        return render_template('new_camera.html')
+
+
 
 @app.route("/logout")
 def logout():
@@ -217,5 +243,5 @@ def page_not_found(e):
 def load_user(userid):
     return User(userid)
 
-# if __name__ == '__main__':
-#     app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
