@@ -13,14 +13,11 @@ from app import app
 from twilio.rest import Client
 import urllib2
 import urllib
-from flask import Flask, abort, flash, redirect, render_template, request, url_for, jsonify
-from flask import Response, request, session
+from flask import Flask, abort, flash, redirect, render_template, request, url_for, jsonify, Response, session
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
-from flask import json
+#from flask import json
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 
-# UNCOMMENT ON AWS, if on dev server, run python views.py
-app = Flask(__name__)
 
 # config
 app.config.update(
@@ -56,6 +53,7 @@ class User(UserMixin):
 @app.route('/test1')
 def test1():
     return makeSafetrekCall()
+
 @app.route('/home')
 def home():
     if not session.get('logged_in'):
@@ -180,8 +178,8 @@ def poll():
         fallen_prob =  logo_classification_result['results'][0]['predictions'][0]['labels']['people laying down']
         not_fallen_prob = 1- fallen_prob
 
-        if fallen_prob > 0.97:
-            if !called_API:
+        if fallen_prob > 0.80:
+            if not called_API:
                 client.api.account.messages.create(
                         to="+17576797299",
                         from_="+17573798690",
@@ -227,8 +225,6 @@ def new_camera():
     else:
         return render_template('new_camera.html')
 
-
-
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
@@ -242,6 +238,3 @@ def page_not_found(e):
 # callback to reload the user object        
 def load_user(userid):
     return User(userid)
-
-if __name__ == '__main__':
-    app.run(debug=True)
