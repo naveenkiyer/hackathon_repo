@@ -8,6 +8,7 @@ import os
 import time
 import requests
 from matroid.client import Matroid
+<<<<<<< HEAD
 from flask import request
 from flask import render_template
 from flask import Flask, abort, flash, redirect, render_template, request, url_for, jsonify
@@ -17,13 +18,21 @@ from flask.ext.login import LoginManager, UserMixin, login_required, login_user,
 from app import app
 import urllib
 
+=======
+from flask import Flask, abort, flash, redirect, render_template, request, url_for
+from flask import Response, request, session
+from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
+from flask import json
+# UNCOMMENT ON AWS, if on dev server, run python views.py
+app = Flask(__name__)
+>>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
 
 # config
 app.config.update(
     SECRET_KEY = 'yoyoma',
-    LOGIN_DISABLED = False
 )
 
+<<<<<<< HEAD
 counter = 0
 idx = 1
 token = "c.mnDnhhSvAdqKkN6HA173o4y9khP8SQ08cgO1V4sO12wFLhhNRPgBkbuaGLcdANjvxyx0eFRUzAFeMCT3MXnntmc85qE8MMI55T0Eo8X9gNAJnEqHgg6k4JuZm7gl8s9w2ZbAz3hwY7ArHOpb" # Update with your token
@@ -42,6 +51,8 @@ s3 = boto3.resource('s3', region_name='us-west-2')
 #driver = webdriver.Firefox(executable_path='/home/ubuntu/dataviz/geckodriver', firefox_options=opts)
 
 # silly user model
+=======
+>>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
 class User(UserMixin):
 
     def __init__(self, id):
@@ -52,27 +63,15 @@ class User(UserMixin):
     def __repr__(self):
         return "%d/%s/%s" % (self.id, self.name, self.password)
 
-
-# create some users with ids 1 to 20       
-users = [User(id) for id in range(1, 21)]
-
-# flask-login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
-
-
-# @login_manager.unauthorized_handler
-# def unauthorized_callback():
-#     return redirect('http://www.google.com')
-
-
 @app.route('/home')
-@login_required
 def home():
-    api = Matroid(client_id = 'xRmlXjxOgAcbgYYq', client_secret = 'xwEdsDiE8Cx5XiBpGOsWrsRysVvkyfiy')
-    logo_classification_result = api.classify_image(detector_id = '5ab6a975ae9d34000dce83fe', image_url = 'http://i.dailymail.co.uk/i/pix/2011/06/21/article-2006103-0CA8818400000578-744_1024x615_large.jpg')
-    return str(logo_classification_result)
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('home.html')
+    # api = Matroid(client_id = 'xRmlXjxOgAcbgYYq', client_secret = 'xwEdsDiE8Cx5XiBpGOsWrsRysVvkyfiy')
+    # logo_classification_result = api.classify_image(detector_id = '5ab6a975ae9d34000dce83fe', image_url = 'http://i.dailymail.co.uk/i/pix/2011/06/21/article-2006103-0CA8818400000578-744_1024x615_large.jpg')
+    # return str(logo_classification_result)
 
 @app.route('/authorize')
 def authorize():
@@ -86,26 +85,29 @@ def success():
 
 @app.route('/')
 def index():
-    return Response("Hello World12345!")
-
-@app.route('/success')
-def save_authentication():
-    return render_template("success.html")
+    return render_template('login.html')
 
 # somewhere to login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']        
+        password = request.form['password']  
+        print("HELLO")
+        print(username)
+        print(password)     
         if password == username + "_secret":
-            id = username.split('user')[1]
-            user = User(id)
-            login_user(user)
-            return redirect(url_for('home'))
+            # id = username.split('user')[1]
+            # user = User(id)
+            # login_user(user)
+            # print("BEFORE REDIRECT")
+            session['logged_in'] = True
+            return home()
         else:
+            flash('wrong password!')
             return abort(401)
     else:
+<<<<<<< HEAD
         return Response('''
         <form action="" method="post">
             <p><input type=text name=username>
@@ -178,20 +180,26 @@ def camera():
 
 
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return Response('<p>Logged out</p>')
+=======
+        if session['logged_in'] == False:
+            return render_template("login.html")
+        else:
+            return render_template("home.html")
 
+>>>>>>> 1bc1e7f03a5103853a6e68bc96fe7a137e4b385c
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
 
 # handle login failed
 @app.errorhandler(401)
 def page_not_found(e):
-    return Response('<p>Login failed</p>')
-    
+    return render_template("login.html")
     
 # callback to reload the user object        
-@login_manager.user_loader
 def load_user(userid):
     return User(userid)
+
+if __name__ == '__main__':
+    app.run(debug=True)

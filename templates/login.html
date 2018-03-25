@@ -1,13 +1,30 @@
+<link rel="stylesheet" href="../static/css/style.css" type="text/css">
 {% block body %}
-  <h2>Login</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('login') }}" method=post>
-    <dl>
-      <dt>Email:
-      <dd><input type=text name=email>
-      <dt>Password:
-      <dd><input type=password name=password>
-      <dd><input type=submit value=Login>
-    </dl>
-  </form>
+ 
+ 
+<form action="/login" method="POST">
+  <div class="login">
+    <div class="login-screen">
+      <div class="app-title">
+        <h1>FallSafe</h1>
+      </div>
+ 
+      <div class="login-form">
+        <div class="control-group">
+        <input type="text" class="login-field" value="" placeholder="username" name="username">
+        <label class="login-field-icon fui-user" for="login-name"></label>
+        </div>
+ 
+        <div class="control-group">
+        <input type="password" class="login-field" value="" placeholder="password" name="password">
+        <label class="login-field-icon fui-lock" for="login-pass"></label>
+        </div>
+ 
+                <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
+          <br>
+      </div>
+    </div>
+  </div>
+</form>
+
 {% endblock %}
