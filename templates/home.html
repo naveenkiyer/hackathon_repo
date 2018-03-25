@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>FallSafe</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
+ 
+ 
+</head>
+ 
+<body>
+ 
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="#">Home</a>
+                    </li>
+                    {% if session['logged_in'] %}
+                      <li role="presentation" style="margin-left:20px"><a href='logout'>Logout</a></li>
+                    {% else %}
+                    <li role="presentation" style="margin-left:20px"><a href="login">Sign In</a>
+                      {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <h2>Cameras</h2>
+        <div id="main" class="container">
+    
+        <table class="table table-hover">
+          <tr>
+            <th>#
+            <th>Name
+            <th>Location
+            <th>Description
+        </table>
+        <p>
+          <a href="{{ url_for('home') }}" class="btn btn-large btn-primary">Create New Camera</a>
+        </p>
+ 
+ 
+    </div>
+
+ 
+    </div>
+</body>
+ 
+</html>
+
+
+{% block body %}
+
+{% endblock %}
