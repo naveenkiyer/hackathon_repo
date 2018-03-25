@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+
+<head>
+    <title>Create New Camera</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+
+ 
+ 
+</head>
+<body style="background-color:#FFFFFF">
+ 
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="home">Home</a>
+                    </li>
+                    {% if session['logged_in'] %}
+                      <li role="presentation" style="margin-left:20px"><a href='logout'>Logout</a></li>
+                    {% else %}
+                    <li role="presentation" style="margin-left:20px"><a href="login">Sign In</a>
+                      {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+ 
+    <form action="/new_camera" method="POST">
+  <div class="login">
+    <div class="login-screen">
+ 
+      <div class="login-form">
+        <div class="control-group">
+        <input type="text" value="" placeholder="Camera Name" name="name">
+        <label class="login-field-icon fui-user" for="login-name"></label>
+        </div>
+ 
+        <div class="control-group">
+        <input type="text" value="" placeholder="Location" name="location">
+        <label class="login-field-icon fui-lock" for="login-pass"></label>
+        </div>
+
+        <div class="control-group">
+        <input type="text" value="" placeholder="Description" name="description">
+        <label class="login-field-icon fui-lock" for="login-pass"></label>
+        </div>
+
+        <div class="control-group">
+        <input type="text" value="" placeholder="Phone Numbers" name="list_of_numbers">
+        <label class="login-field-icon fui-lock" for="login-pass"></label>
+        </div>
+ 
+                <input type="submit" value="Create" class="btn btn-primary btn-large btn-block" >
+          <br>
+      </div>
+    </div>
+  </div>
+</form>
+
+</body>
+ 
+</html>
