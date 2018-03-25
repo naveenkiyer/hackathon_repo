@@ -9,13 +9,43 @@
  
     <link href="../static/css/jumbotron-narrow.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
 </head>
  
 <body>
- 
-    <div id="camera">
-        <img id="cam_img_id" src={{cam_img}} height="580px" width="720px"/>
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="#">Home</a>
+                    </li>
+                    {% if session['logged_in'] %}
+                      <li role="presentation" style="margin-left:20px"><a href='logout'>Logout</a></li>
+                    {% else %}
+                    <li role="presentation" style="margin-left:20px"><a href="login">Sign In</a>
+                      {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    <div class="row">
+        <div id="camera" class="col-md-6">
+            <img id="cam_img_id" src={{cam_img}} height="425px" width="525px"/>
+        </div>
+
+        <div class="col-md-6" id="data">
+            <h1> Image Classification </h1>
+
+            <svg height='300px' width='600px' id="canvas">
+                <rect id="fallen" height="40" width="200" x="50" y="100" rx="3" ry="3" style="fill:#CF000F"/>
+                <rect id="not_fallen" height="40" width="200" x="50" y="180" rx="3" ry="3" style="fill:#00B16A" />
+                <text id="fallen_text" x="270" y="125"> Fallen</text>
+                <text id="not_fallen_text" x="270" y="205"> Not Fallen</text>
+
+
+            </svg>
+        </div>
+    </div>
     </div>
 
 
@@ -36,6 +66,10 @@
                 //$("#cam_img_id").text(data.result);
                 if (data.found == true) {
                     changeImage(data.img_url);
+                    d3.select('#fallen').transition().duration(1000).attr('width', (350*data.fallen) + 15);
+                    d3.select('#fallen_text').transition().duration(1000).attr('x', (350*data.fallen) + 15 + 60);
+                    d3.select('#not_fallen').transition().duration(1000).attr('width', (350*data.not_fallen) + 15);
+                    d3.select('#not_fallen_text').transition().duration(1000).attr('x', (350*data.not_fallen) + 15 + 60);
                 }
               });
               return false;
