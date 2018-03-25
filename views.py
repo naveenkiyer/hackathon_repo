@@ -7,6 +7,8 @@ from flask import Flask, abort, flash, redirect, render_template, request, url_f
 from flask import Response, request, session
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user 
 from flask import json
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+
 # UNCOMMENT ON AWS, if on dev server, run python views.py
 app = Flask(__name__)
 
@@ -14,6 +16,8 @@ app = Flask(__name__)
 app.config.update(
     SECRET_KEY = 'yoyoma',
 )
+
+cameras = {}
 
 class User(UserMixin):
 
@@ -63,6 +67,7 @@ def login():
             return render_template("login.html")
         else:
             return render_template("home.html")
+
 
 @app.route("/logout")
 def logout():
